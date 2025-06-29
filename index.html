@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindful Paths - Your Wellness Journey</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Base styles for a clean slate */
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Custom font and gradient background */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Deep purple-blue gradient */
+            color: #1e293b; /* Dark slate gray for contrast */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            line-height: 1.6;
+        }
+
+        /* Smooth scrolling for anchor links */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Particle effect styles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Behind content */
+            pointer-events: none; /* Don't interfere with clicks */
+            overflow: hidden; /* Contain particles */
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1); /* Subtle white */
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        /* Particle floating animation */
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Glassmorphism effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Section entrance animations */
+        @keyframes heroReveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(50px);
+                filter: blur(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            0% {
+                opacity: 0;
+                transform: translateX(-100px) rotate(-5deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) rotate(0deg);
+            }
+        }
+
+        @keyframes slideInRight {
+            0% {
+                opacity: 0;
+                transform: translateX(100px) rotate(5deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) rotate(0deg);
+            }
+        }
+
+        /* Glowing effects */
+        @keyframes morphingGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(139, 92, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(236, 72, 153, 0.4), 0 0 60px rgba(236, 72, 153, 0.3);
+            }
+        }
+
+        @keyframes textGlow {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(139, 92, 246, 0.3);
+            }
+        }
+
+        /* Card floating effect */
+        @keyframes cardFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+        }
+
+        /* Applying animations with delays */
+        .animate-hero-reveal {
+            animation: heroReveal 1.2s cubic-bezier(0.23, 1, 0.320, 1) forwards;
+        }
+
+        .animate-slide-in-left {
+            opacity: 0; /* Hidden by default for animation */
+            animation: slideInLeft 0.8s cubic-bezier(0.23, 1, 0.320, 1) forwards;
+        }
+
+        .animate-slide-in-right {
+            opacity: 0; /* Hidden by default for animation */
+            animation: slideInRight 0.8s cubic-bezier(0.23, 1, 0.320, 1) forwards;
+        }
+
+        .animate-morphing-glow {
+            animation: morphingGlow 3s ease-in-out infinite;
+        }
+
+        .animate-text-glow {
+            animation: textGlow 2s ease-in-out infinite;
+        }
+
+        .animate-card-float {
+            animation: cardFloat 6s ease-in-out infinite;
+        }
+
+        /* Primary button styling with hover effect */
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(45deg, #8b5cf6, #ec4899); /* Purple to pink */
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Card hover effect */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-15px) rotateX(5deg);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Mobile menu specific animation */
+        .mobile-menu-enter {
+            animation: slideInRight 0.3s ease-out forwards;
+        }
+
+        /* Gradient text effect */
+        .gradient-text {
+            background: linear-gradient(45deg, #8b5cf6, #ec4899, #f59e0b);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* Scroll progress indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6, #ec4899);
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+
+        /* Staggered animation delays for elements */
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+        .stagger-5 { animation-delay: 0.5s; }
+        .stagger-6 { animation-delay: 0.6s; }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+
+    <div class="particles" id="particles"></div>
+
+    <header class="glass fixed top-4 left-4 right-4 py-4 px-6 md:px-8 z-50 rounded-2xl transition-all duration-300">
+        <nav class="flex items-center justify-between max-w-7xl mx-auto">
+            <a href="index.html" class="flex items-center space-x-3 text-2xl font-bold text-white hover:text-purple-200 transition-all duration-300 group">
+                <div class="relative">
+                    <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 002.944 12c.047 1.41.272 2.802.675 4.162a12.001 12.001 0 0018.362-7.162 11.955 11.955 0 01-3.04-8.618z" />
+                        </svg>
+                    </div>
+                    <div class="absolute -inset-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                </div>
+                <span class="gradient-text">Mindful Paths</span>
+            </a>
+
+           <ul id="desktop-menu" class="hidden md:flex space-x-8">
+        <li><a href="index.html" class="text-white/80 hover:text-white font-medium transition-all duration-300 relative group px-4 py-2 rounded-lg hover:bg-white/10">
+            <i class="fas fa-home"></i> Home
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 group-hover:w-full transition-all duration-300"></span>
+        </a></li>
+        <li><a href="resources.html" class="text-white/80 hover:text-white font-medium transition-all duration-300 relative group px-4 py-2 rounded-lg hover:bg-white/10">
+            <i class="fas fa-book-open"></i> Resources
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 group-hover:w-full transition-all duration-300"></span>
+        </a></li>
+        <li><a href="tools.html" class="text-white/80 hover:text-white font-medium transition-all duration-300 relative group px-4 py-2 rounded-lg hover:bg-white/10">
+            <i class="fas fa-tools"></i> Tools
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 group-hover:w-full transition-all duration-300"></span>
+        </a></li>
+        <li><a href="contact.html" class="text-white/80 hover:text-white font-medium transition-all duration-300 relative group px-4 py-2 rounded-lg hover:bg-white/10">
+            <i class="fas fa-robot"></i> AI Bot
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 group-hover:w-full transition-all duration-300"></span>
+        </a></li>
+            <button id="mobile-menu-button" class="md:hidden text-white hover:text-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-lg p-2 transition-all duration-300">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </nav>
+
+        <div id="mobile-menu" class="md:hidden hidden mt-4 glass-dark rounded-xl p-4">
+            <ul class="space-y-2">
+                <li><a href="index.html" class="block text-white/80 hover:text-white font-medium py-3 px-4 rounded-lg hover:bg-white/10 transition-all duration-300">Home</a></li>
+                <li><a href="resources.html" class="block text-white/80 hover:text-white font-medium py-3 px-4 rounded-lg hover:bg-white/10 transition-all duration-300">Resources</a></li>
+                <li><a href="tools.html" class="block text-white/80 hover:text-white font-medium py-3 px-4 rounded-lg hover:bg-white/10 transition-all duration-300">Tools</a></li>
+                <li><a href="contact.html" class="block text-white/80 hover:text-white font-medium py-3 px-4 rounded-lg hover:bg-white/10 transition-all duration-300">AI BOT</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="pt-32">
+        <section id="home" class="min-h-screen flex items-center justify-center px-4 md:px-8 relative">
+            <div class="text-center max-w-5xl mx-auto animate-hero-reveal">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black mb-8 text-white animate-text leading-tight">
+                    Embrace Your Journey to 
+                    <span class="gradient-text">Inner Peace</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed">
+                    Discover transformative tools, evidence-based resources, and compassionate support to nurture your mental well-being and unlock your fullest potential.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                    <a href="resources.html" class="btn-primary px-12 py-4 rounded-2xl font-bold text-lg text-white relative z-10 transform hover:scale-105 transition-all duration-300">
+                        Explore Resources
+                    </a>
+                    <a href="contact.html" class="glass px-12 py-4 rounded-2xl font-bold text-lg text-white hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+                        AI BOT
+                    </a>
+                </div>
+            </div>
+
+            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+                <div class="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
+                    <div class="w-1 h-3 bg-white/70 rounded-full mt-2 animate-pulse"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="py-24 px-4 md:px-8 relative">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-6xl font-bold text-white mb-6 animate-slide-in-left">
+                        About <span class="gradient-text">Mindful Paths</span>
+                    </h2>
+                    <div class="w-24 h-1 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto rounded-full"></div>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div class="space-y-8 animate-slide-in-left stagger-2">
+                        <div class="glass rounded-3xl p-8 card-hover animate-card-float">
+                            <p class="text-white/90 text-lg leading-relaxed mb-6">
+                                At **Mindful Paths**, we believe that mental well-being is not just a destination, but a beautiful journey of self-discovery and growth. Our mission transcends traditional wellness approaches by creating an immersive, compassionate ecosystem designed for your unique path to inner peace.
+                            </p>
+                            <p class="text-white/90 text-lg leading-relaxed mb-6">
+                                We understand that every journey is unique, which is why our content is designed to cater to diverse needs, whether you're looking for stress management techniques, mindfulness exercises, or information on professional support. We are committed to fostering a safe space where you can learn, grow, and connect.
+                            </p>
+                            <p class="text-white/90 text-lg leading-relaxed">
+                                Join our thriving community as we walk together towards greater resilience, self-awareness, and lasting transformation.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="animate-slide-in-right stagger-3">
+                        <div class="relative">
+                            <div class="glass rounded-3xl p-2 animate-morphing-glow">
+                                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Mindful Journey" class="w-full h-96 object-cover rounded-2xl">
+                            </div>
+                            <div class="absolute -inset-4 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-3xl blur-xl"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="py-24 px-4 md:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-6xl font-bold text-white mb-6 animate-slide-in-right">
+                        Our <span class="gradient-text">Approach</span> to Wellness
+                    </h2>
+                    <p class="text-xl text-white/80 max-w-3xl mx-auto">
+                        Discover our comprehensive, science-backed methodology designed to transform your wellness journey.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="glass rounded-3xl p-8 card-hover animate-slide-in-left stagger-1 group">
+                        <div class="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-purple-200 transition-colors duration-300">Holistic Well-being</h3>
+                        <p class="text-white/80 leading-relaxed">
+                            Integrating mind, body, and spirit through evidence-based practices for complete well-being transformation.
+                        </p>
+                    </div>
+
+                    <div class="glass rounded-3xl p-8 card-hover animate-slide-in-left stagger-2 group">
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-blue-200 transition-colors duration-300">Empowering Tools</h3>
+                        <p class="text-white/80 leading-relaxed">
+                            Advanced digital tools and personalized exercises designed to build resilience and emotional intelligence.
+                        </p>
+                    </div>
+
+                    <div class="glass rounded-3xl p-8 card-hover animate-slide-in-left stagger-3 group">
+                        <div class="w-16 h-16 bg-gradient-to-r from-green-400 to-blue-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-green-200 transition-colors duration-300">Guidance & Support</h3>
+                        <p class="text-white/80 leading-relaxed">
+                            Professional insights and therapeutic approaches tailored to your unique journey and goals.
+                        </p>
+                    </div>
+
+                    <div class="glass rounded-3xl p-8 card-hover animate-slide-in-left stagger-4 group">
+                        <div class="w-16 h-16 bg-gradient-to-r from-pink-400 to-red-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H2v-2a3 3 0 015.356-1.857M17 20v-2c0-.653-.146-1.284-.424-1.857M7 20v-2c0-.653.146-1.284.424-1.857M7 20h10m0 0a2 2 0 100-4 2 2 0 000 4zm-4 4v-2c0-.653.146-1.284.424-1.857M10 20v-2c0-.653.146-1.284.424-1.857m2.324-4.324a3 3 0 01-.424-1.857m0 0V9a2 2 0 00-2-2h-2a2 2 0 00-2 2v.424m5.153 6.648A3 3 0 0112 16c-.653 0-1.284-.146-1.857-.424M12 16v-2c0-.653-.146-1.284-.424-1.857m0 0V9a2 2 0 00-2-2h-2a2 2 0 00-2 2v.424M9 16c-.653 0-1.284-.146-1.857-.424M9 16v-2c0-.653.146-1.284.424-1.857m0 0V9a2 2 0 00-2-2h-2a2 2 0 00-2 2v.424" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-pink-200 transition-colors duration-300">Community & Connection</h3>
+                        <p class="text-white/80 leading-relaxed">
+                            Connect with like-minded individuals in a safe, supportive environment focused on growth and healing.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact-promo" class="py-24 px-4 md:px-8">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="glass rounded-3xl p-12 md:p-16 animate-morphing-glow">
+                    <h2 class="text-4xl md:text-6xl font-bold text-white mb-8 animate-text-glow">
+                        Ready to Start Your Journey?
+                    </h2>
+                    <p class="text-xl text-white/90 mb-12 leading-relaxed">
+                        We're here to support you every step of the way. Reach out to us with any questions or to learn more about how Mindful Paths can help.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                        <a href="contact.html" class="btn-primary px-12 py-4 rounded-2xl font-bold text-lg text-white transform hover:scale-105 transition-all duration-300">
+                           CONTECT AI
+                        </a>
+                        <a href="resources.html" class="glass-dark px-12 py-4 rounded-2xl font-bold text-lg text-white hover:bg-black/20 transition-all duration-300 transform hover:scale-105">
+                            Explore More
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="glass-dark mt-24 py-12 px-4 md:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center space-y-8 md:space-y-0">
+                <div class="text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start space-x-3 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 002.944 12c.047 1.41.272 2.802.675 4.162a12.001 12.001 0 0018.362-7.162 11.955 11.955 0 01-3.04-8.618z" />
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold gradient-text">Mindful Paths</span>
+                    </div>
+                    <p class="text-white/70 mb-2">&copy; 2025 Mindful Paths. All rights reserved.</p>
+                    <p class="text-white/50 text-sm">Nurturing minds, fostering peace, transforming lives.</p>
+                </div>
+
+                <ul class="flex flex-wrap justify-center gap-8">
+                    <li><a href="index.html" class="text-white/70 hover:text-white transition-colors duration-300">Home</a></li>
+                    <li><a href="resources.html" class="text-white/70 hover:text-white transition-colors duration-300">Resources</a></li>
+                    <li><a href="tools.html" class="text-white/70 hover:text-white transition-colors duration-300">Tools</a></li>
+                    <li><a href="contact.html" class="text-white/70 hover:text-white transition-colors duration-300">Contact</a></li>
+                    <li><a href="#" class="text-white/70 hover:text-white transition-colors duration-300">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            // Toggle mobile menu visibility and apply animation
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('mobile-menu-enter');
+                }
+            });
+
+            // Close mobile menu when a link is clicked
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            // Dynamic particle background generation
+            const particlesContainer = document.getElementById('particles');
+            const numParticles = 50;
+
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Randomize particle size
+                const size = Math.random() * 5 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                // Randomize starting position
+                const startLeft = Math.random() * 100;
+                particle.style.left = `${startLeft}vw`;
+
+                // Randomize animation duration and delay
+                const animationDuration = Math.random() * 15 + 15;
+                particle.style.animationDuration = `${animationDuration}s`;
+                const animationDelay = Math.random() * -animationDuration; // Negative delay to start at different points
+                particle.style.animationDelay = `${animationDelay}s`;
+
+                particlesContainer.appendChild(particle);
+            }
+
+            // Scroll indicator functionality
+            const scrollIndicator = document.getElementById('scrollIndicator');
+
+            window.addEventListener('scroll', () => {
+                const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPosition = window.scrollY;
+                const progress = (scrollPosition / totalHeight) * 100;
+                scrollIndicator.style.width = `${progress}%`;
+
+                // Shrink header on scroll
+                const header = document.querySelector('header');
+                if (scrollPosition > 50) {
+                    header.classList.add('py-2', 'px-4', 'md:px-6', 'text-sm');
+                    header.classList.remove('py-4', 'px-6', 'md:px-8', 'text-base');
+                } else {
+                    header.classList.remove('py-2', 'px-4', 'md:px-6', 'text-sm');
+                    header.classList.add('py-4', 'px-6', 'md:px-8', 'text-base');
+                }
+            });
+
+            // Intersection Observer for scroll animations
+            const animateOnScroll = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100'); // Make visible
+                        // Apply specific animation based on class
+                        if (entry.target.classList.contains('animate-slide-in-left')) {
+                            entry.target.style.animation = 'slideInLeft 0.8s cubic-bezier(0.23, 1, 0.320, 1) forwards';
+                        } else if (entry.target.classList.contains('animate-slide-in-right')) {
+                            entry.target.style.animation = 'slideInRight 0.8s cubic-bezier(0.23, 1, 0.320, 1) forwards';
+                        } else if (entry.target.classList.contains('animate-hero-reveal')) {
+                             entry.target.style.animation = 'heroReveal 1.2s cubic-bezier(0.23, 1, 0.320, 1) forwards';
+                        }
+                        observer.unobserve(entry.target); // Stop observing once animated
+                    }
+                });
+            };
+
+            const observerOptions = {
+                root: null, // Observe viewport
+                rootMargin: '0px',
+                threshold: 0.1 // Trigger when 10% of element is visible
+            };
+
+            const observer = new IntersectionObserver(animateOnScroll, observerOptions);
+
+            // Observe all elements with animation classes
+            document.querySelectorAll('.animate-slide-in-left, .animate-slide-in-right, .animate-hero-reveal').forEach(element => {
+                element.style.opacity = '0'; // Hide initially for animation
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>

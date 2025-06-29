@@ -1,1 +1,1 @@
-# wellness
+# wellness app

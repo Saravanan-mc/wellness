@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindful Bot - Emotion Detection & Support</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles for Inter font, background, and text color */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Mindful Paths gradient */
+            color: #1e293b; /* Dark slate gray for general text */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure footer sticks to bottom */
+        }
+
+        html {
+            scroll-behavior: smooth; /* Smooth scrolling for anchor links */
+        }
+
+        /* Particle background animation */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Glassmorphism effects */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Fade-in and slide-up animations for content */
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Special glow animation for elements */
+        @keyframes morphingGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(139, 92, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(236, 72, 153, 0.4), 0 0 60px rgba(236, 72, 153, 0.3);
+            }
+        }
+
+        @keyframes textGlow {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(139, 92, 246, 0.3);
+            }
+        }
+
+        .animate-fade-in-scale {
+            animation: fadeInScale 0.8s cubic-bezier(0.23, 1, 0.320, 1) forwards;
+        }
+
+        .animate-slide-in-up {
+            animation: slideInUp 0.7s cubic-bezier(0.23, 1, 0.320, 1) forwards;
+            opacity: 0; /* Hidden by default, revealed by JS */
+        }
+
+        .animate-morphing-glow {
+            animation: morphingGlow 3s ease-in-out infinite;
+        }
+
+        .animate-text-glow {
+            animation: textGlow 2s ease-in-out infinite;
+        }
+
+        /* Primary Button Styling with hover effects */
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(45deg, #8b5cf6, #ec4899); /* Purple to Pink Gradient */
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Mobile menu animation */
+        .mobile-menu-enter {
+            animation: fadeInScale 0.3s ease-out forwards;
+        }
+
+        /* Gradient text for titles/logo */
+        .gradient-text {
+            background: linear-gradient(45deg, #8b5cf6, #ec4899, #f59e0b); /* Purple, Pink, Orange Gradient */
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* Scroll progress indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6, #ec4899);
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+
+        /* Staggered animation delays */
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+        .stagger-5 { animation-delay: 0.5s; }
+        .stagger-6 { animation-delay: 0.6s; }
+        .stagger-7 { animation-delay: 0.7s; }
+
+        /* Emotion Display colors */
+        .emotion-label { transition: background-color 0.3s, color 0.3s; }
+        .happy { color: #dcfce7; background-color: #22c55e; } /* green-200 / green-600 */
+        .sad { color: #bfdbfe; background-color: #3b82f6; } /* blue-200 / blue-600 */
+        .angry { color: #fee2e2; background-color: #ef4444; } /* red-200 / red-500 */
+        .neutral { color: #e2e8f0; background-color: #64748b; } /* slate-200 / slate-600 */
+        .surprised { color: #fef9c3; background-color: #eab308; } /* yellow-200 / yellow-600 */
+        .disgusted { color: #e9d5ff; background-color: #a855f7; } /* purple-200 / purple-600 */
+        .fearful { color: #e0f2f7; background-color: #06b6d4; } /* cyan-100 / cyan-600 */
+        .unknown { color: #d1d5db; background-color: #9ca3af; } /* gray-300 / gray-400 */
+
+        /* Specific video/canvas styling */
+        #video-container {
+            width: 100%;
+            max-width: 600px; /* Constrain max width for desktop */
+            aspect-ratio: 4/3; /* Maintain aspect ratio */
+            position: relative;
+            margin-bottom: 20px;
+            background: #000;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex; /* For centering video */
+            justify-content: center;
+            align-items: center;
+        }
+
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 12px;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Loader styling */
+        #loader {
+            display: none;
+            margin: 20px auto;
+            border: 6px solid rgba(255, 255, 255, 0.2);
+            border-top: 6px solid #8b5cf6; /* Purple color */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+
+        /* Chatbot styling */
+        #chat-log {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 15px;
+            background-color: rgba(0, 0, 0, 0.1); /* Darker glass for chat log */
+            color: #e2e8f0; /* Light gray text */
+        }
+
+        .chat-message {
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            max-width: 85%;
+            word-wrap: break-word;
+            text-align: left;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-message {
+            background-color: #4c6fe5; /* A vibrant blue */
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot-message {
+            background-color: rgba(255, 255, 255, 0.2); /* Lighter glass */
+            color: #e2e8f0;
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+        }
+        .bot-message.empathy-message {
+            background: linear-gradient(90deg, #8b5cf6, #ec4899); /* Gradient for empathy messages */
+            color: white;
+            border: none;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #chat-input-area {
+            display: flex;
+            gap: 10px;
+            padding-top: 10px; /* Space between log and input */
+        }
+
+        #chat-input {
+            flex-grow: 1;
+            padding: 12px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            font-size: 15px;
+            background-color: rgba(0, 0, 0, 0.2); /* Darker input field */
+            color: white;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        #chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        #chat-input:focus {
+            border-color: #a78bfa; /* purple-400 */
+            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.5);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
+            #main-content {
+                flex-direction: column;
+                align-items: center;
+                padding: 1.5rem;
+            }
+            #chatbot-column {
+                flex: none;
+                width: 100%;
+                max-width: 600px; /* Align with video max-width */
+                height: auto; /* Allow height to expand */
+                margin-top: 2rem; /* Space between video and chat on smaller screens */
+            }
+            #video-container {
+                margin-bottom: 0; /* Removed extra margin for better stacking */
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+            .nav-links {
+                display: none; /* Hide desktop nav links on mobile */
+            }
+            .mobile-menu-button {
+                display: block; /* Show mobile menu button */
+            }
+            .logo {
+                font-size: 1.5rem;
+            }
+            .logo svg {
+                height: 1.75rem;
+                width: 1.75rem;
+            }
+            .footer-content {
+                text-align: center;
+                flex-direction: column;
+            }
+            .footer-links {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+
+        /* Mobile menu specific display */
+        .mobile-menu.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+    <div class="particles" id="particles"></div>
+
+    <header class="glass fixed top-4 left-4 right-4 py-4 px-6 md:px-8 z-50 rounded-2xl transition-all duration-300">
+        <nav class="flex items-center justify-between max-w-7xl mx-auto">
+            <a href="index.html" class="flex items-center space-x-3 text-2xl font-bold text-white hover:text-purple-200 transition-all duration-300 group">
+                <div class="relative">
+                    <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 002.944 12c.047 1.41.272 2.802.675 4.162a12.001 12.001 0 0018.362-7.162 11.955 11.955 0 01-3.04-8.618z" />
+                        </svg>
+                    </div>
+                    <div class="absolute -inset-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                </div>
+                <span class="gradient-text">Mindful Bot</span>
+            </a>
+
+            <ul id="desktop-menu" class="hidden md:flex space-x-8">
+                <li><a href="index.html" class="text-white/80 hover:text-white font-medium transition-all duration-300 relative group px-4 py-2 rounded-lg hover:bg-white/10">
+                    Home
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 group-hover:w-full transition-all duration-300"></span>
+                </a></li>
+                <li><a href="#detection-column" class="text-white font-medium transition-all duration-300 relative group px-4 py-2 rounded-lg hover:bg-white/10">
+                    Emotion Detection
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-400 to-pink-400"></span>
+                </a></li>
+                <li><a href="#chatbot-column" class="text-white/80 hover:text-white font-medium transition-all duration-300 relative group px-4 py-2 rounded-lg hover:bg-white/10">
+                    Support Bot
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 group-hover:w-full transition-all duration-300"></span>
+                </a></li>
+               
+            </ul>
+
+            <button class="mobile-menu-button" id="mobile-menu-button">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </nav>
+
+        <div class="mobile-menu hidden mt-4 glass-dark rounded-xl p-4" id="mobile-menu">
+            <ul>
+                <li><a href="index.html" class="block text-white/80 hover:text-white font-medium py-3 px-4 rounded-lg hover:bg-white/10 transition-all duration-300">Home</a></li>
+                <li><a href="#detection-column" class="block text-white font-medium py-3 px-4 rounded-lg bg-white/10 transition-all duration-300">Emotion Detection</a></li>
+                <li><a href="#chatbot-column" class="block text-white/80 hover:text-white font-medium py-3 px-4 rounded-lg hover:bg-white/10 transition-all duration-300">Support Bot</a></li>
+                <li><a href="contact.html" class="block text-white/80 hover:text-white font-medium py-3 px-4 rounded-lg hover:bg-white/10 transition-all duration-300">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="pt-32 flex-grow flex flex-col items-center justify-center container mx-auto px-6 md:px-12 py-8">
+        <h1 class="text-3xl md:text-5xl font-bold text-center text-white mb-10 animate-text-glow animate-fade-in-scale">Emotion Detection & <span class="gradient-text">Mental Health Bot</span></h1>
+
+        <div id="main-content" class="flex flex-col lg:flex-row gap-8 lg:gap-12 w-full max-w-6xl mx-auto items-start animate-fade-in-scale stagger-1">
+            <div id="detection-column" class="flex flex-col items-center flex-1 w-full glass rounded-2xl p-6 shadow-xl animate-slide-in-up stagger-2">
+                <h2 class="text-xl md:text-2xl font-bold text-white mb-6">Live Emotion Analysis</h2>
+                <div id="video-container">
+                    <video id="video" autoplay muted playsinline></video>
+                    <canvas id="canvas"></canvas>
+                </div>
+                <div id="emotion-display" class="emotion-label neutral w-full py-3 px-4 rounded-lg text-center font-semibold text-lg shadow-md mt-4">
+                    Loading models... Please wait.
+                </div>
+                <div id="loader" class="mt-4"></div>
+                <div id="controls" class="flex flex-wrap justify-center gap-4 mt-6">
+                    <button id="startBtn" disabled class="btn-primary px-8 py-3 rounded-full font-bold text-lg text-white shadow-md">
+                        Start Detection
+                    </button>
+                    <button id="stopBtn" disabled class="glass-dark px-8 py-3 rounded-full font-bold text-lg text-white shadow-md hover:bg-black/20 transition-all duration-300">
+                        Stop Detection
+                    </button>
+                </div>
+            </div>
+
+            <div id="chatbot-column" class="flex flex-col flex-1 w-full lg:max-w-md glass rounded-2xl p-6 shadow-xl animate-slide-in-up stagger-3" style="height: 600px;">
+                <h2 class="text-xl md:text-2xl font-bold text-white mb-6">Mental Health Support Bot</h2>
+                <div id="chat-log" class="flex-grow overflow-y-auto rounded-lg mb-4 glass-dark shadow-inner text-white/90">
+                    <div class="chat-message bot-message">Hello! I'm here to offer some support based on how you might be feeling.</div>
+                </div>
+                <div id="chat-input-area" class="flex gap-4">
+                    <input type="text" id="chat-input" placeholder="Type your message..." class="flex-grow px-4 py-3 rounded-full glass-dark text-white placeholder-white/60 focus:ring-purple-400 focus:border-purple-400 text-base outline-none">
+                    <button id="send-chat-btn" class="btn-primary px-6 py-3 rounded-full font-bold text-white shadow-md text-base">
+                        Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass-dark mt-24 py-12 px-4 md:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-8 md:space-y-0">
+            <div class="text-center md:text-left">
+                <div class="flex items-center justify-center md:justify-start space-x-3 mb-4">
+                    <div class="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-lg flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 002.944 12c.047 1.41.272 2.802.675 4.162a12.001 12.001 0 0018.362-7.162 11.955 11.955 0 01-3.04-8.618z" />
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold gradient-text">Mindful Bot</span>
+                </div>
+                <p class="text-white/70 mb-2">&copy; 2025 Mindful Bot. All rights reserved.</p>
+                <p class="text-white/50 text-sm">Nurturing minds, fostering peace, transforming lives.</p>
+            </div>
+
+            <ul class="flex flex-wrap justify-center gap-8">
+                <li><a href="index.html" class="text-white/70 hover:text-white transition-colors duration-300">Home</a></li>
+                <li><a href="#detection-column" class="text-white/70 hover:text-white transition-colors duration-300">Emotion Detection</a></li>
+                <li><a href="#chatbot-column" class="text-white/70 hover:text-white transition-colors duration-300">Support Bot</a></li>
+                <li><a href="contact.html" class="text-white/70 hover:text-white transition-colors duration-300">Contact</a></li>
+                <li><a href="#" class="text-white/70 hover:text-white transition-colors duration-300">Privacy Policy</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script>
+        // DOM elements
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const emotionDisplay = document.getElementById('emotion-display');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const loader = document.getElementById('loader');
+
+        // Chatbot DOM elements
+        const chatLog = document.getElementById('chat-log');
+        const chatInput = document.getElementById('chat-input');
+        const sendChatBtn = document.getElementById('send-chat-btn');
+
+        // Navbar DOM elements
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        // Particles and Scroll Indicator
+        const particlesContainer = document.getElementById('particles');
+        const scrollIndicator = document.getElementById('scrollIndicator');
+
+        let detectionIntervalId;
+        let stream;
+
+        // --- Gemini API Configuration ---
+        // !!! IMPORTANT: For local testing ONLY. DO NOT deploy with client-side keys.
+        // If you want to use models other than gemini-2.0-flash or imagen-3.0-generate-002, provide an API key here.
+        // Otherwise, leave this as-is and Canvas will automatically provide it at runtime.
+        const GEMINI_API_KEY = ""; 
+        const GEMINI_MODEL = 'gemini-2.0-flash'; 
+
+        // --- Emotion Stability Logic ---
+        let lastStableEmotion = null;
+        let currentEmotionBuffer = []; // Store recent emotions
+        const EMOTION_BUFFER_SIZE = 15; // Number of frames to consider for stability (~0.5s at 30fps)
+        const STABILITY_THRESHOLD = 0.7; // 70% of buffer must be the same emotion
+        let chatbotCooldown = false; // To prevent rapid triggering for the same emotion
+        const CHATBOT_COOLDOWN_PERIOD = 30000; // 30 seconds cooldown
+
+        /**
+         * Toggles the visibility of the loading spinner.
+         * @param {boolean} show - True to show the loader, false to hide.
+         */
+        function showLoader(show) {
+            loader.style.display = show ? 'block' : 'none';
+        }
+
+        /**
+         * Loads the necessary face-api.js models.
+         * Updates UI based on loading status.
+         */
+        async function loadModels() {
+            showLoader(true);
+            emotionDisplay.textContent = 'Loading models... Please wait.';
+            emotionDisplay.className = 'emotion-label unknown';
+            try {
+                // Models hosted on a CDN for easy access
+                const MODEL_URL = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/models';
+                await Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL)
+                ]);
+                console.log('Face-API Models loaded successfully');
+                emotionDisplay.textContent = 'Models loaded. Ready to start detection.';
+                addMessageToChatLog("Face detection models loaded. I'm ready when you are!", 'bot');
+                startBtn.disabled = false;
+            } catch (error) {
+                console.error('Error loading models:', error);
+                emotionDisplay.textContent = 'Error loading models. Please refresh.';
+                emotionDisplay.className = 'emotion-label angry';
+                addMessageToChatLog("Sorry, I couldn't load the emotion detection models. Please try refreshing the page.", 'bot');
+            } finally {
+                showLoader(false);
+            }
+        }
+
+        /**
+         * Starts the video stream from the user's camera and initiates emotion detection.
+         * If stream is already active, it just resumes detection.
+         */
+        async function startVideo() {
+            if (stream) {
+                // If stream already exists, just play the video and start detection
+                video.play();
+                startBtn.textContent = 'Detection Active';
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                detectEmotions();
+                return;
+            }
+
+            try {
+                // Request camera access with specified dimensions
+                stream = await navigator.mediaDevices.getUserMedia({ video: { width: 600, height: 450 } });
+                video.srcObject = stream;
+                video.setAttribute('playsinline', ''); // Required for iOS
+
+                emotionDisplay.textContent = 'Initializing camera...';
+                emotionDisplay.className = 'emotion-label neutral';
+
+                // Once video metadata is loaded and video starts playing, set up canvas and start detection
+                video.onplay = () => {
+                    console.log("Video playing");
+                    // Match canvas dimensions to video dimensions for correct overlay
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    faceapi.matchDimensions(canvas, { width: video.videoWidth, height: video.videoHeight });
+                    
+                    startBtn.textContent = 'Detection Active';
+                    startBtn.disabled = true;
+                    stopBtn.disabled = false;
+                    emotionDisplay.textContent = 'Detecting emotions...';
+                    detectEmotions(); // Start the detection loop
+                };
+
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+                emotionDisplay.textContent = 'Camera access denied or error.';
+                emotionDisplay.className = 'emotion-label angry';
+                addMessageToChatLog("I can't seem to access your camera. Please check permissions.", 'bot');
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+            }
+        }
+
+        /**
+         * Stops the emotion detection process and releases the camera stream.
+         */
+        function stopDetection() {
+            // Stop the animation frame loop
+            if (detectionIntervalId) {
+                cancelAnimationFrame(detectionIntervalId);
+                detectionIntervalId = null;
+            }
+            // Stop all tracks in the media stream to release camera
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                video.srcObject = null; // Disconnect video source
+                stream = null; // Clear stream reference
+            }
+            // Clear canvas drawings
+            const context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            // Reset UI elements
+            emotionDisplay.textContent = 'Detection stopped. Click Start to resume.';
+            emotionDisplay.className = 'emotion-label neutral';
+            startBtn.textContent = 'Start Detection';
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            // Reset emotion buffer and cooldown for next detection session
+            currentEmotionBuffer = [];
+            lastStableEmotion = null;
+            chatbotCooldown = false;
+            console.log("Detection stopped and camera released.");
+        }
+
+        /**
+         * Main function for continuous emotion detection.
+         * Draws detections on canvas and updates emotion display.
+         * Triggers chatbot if a stable emotion is detected.
+         */
+        async function detectEmotions() {
+            // Stop if video is not playing or detection was explicitly stopped
+            if (!video.srcObject || video.paused || video.ended || !startBtn.disabled) {
+                // If detection was active but video stopped (e.g., tab switched), stop formally
+                if (startBtn.disabled && detectionIntervalId) stopDetection();
+                return;
+            }
+
+            try {
+                // Detect single face with expressions
+                const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
+                    .withFaceLandmarks()
+                    .withFaceExpressions();
+
+                const displaySize = { width: video.videoWidth, height: video.videoHeight };
+                const context = canvas.getContext('2d');
+                context.clearRect(0, 0, canvas.width, canvas.height); // Clear previous drawings
+
+                if (detection) {
+                    const resizedDetection = faceapi.resizeResults(detection, displaySize);
+                    faceapi.draw.drawDetections(canvas, resizedDetection); // Draw bounding box
+                    faceapi.draw.drawFaceExpressions(canvas, resizedDetection); // Draw expression probabilities
+
+                    const expressions = resizedDetection.expressions;
+                    let dominantEmotion = 'neutral';
+                    let maxConfidence = 0;
+
+                    // Find the emotion with the highest confidence
+                    for (const [emotion, confidence] of Object.entries(expressions)) {
+                        if (confidence > maxConfidence) {
+                            maxConfidence = confidence;
+                            dominantEmotion = emotion;
+                        }
+                    }
+
+                    if (maxConfidence > 0.5) { // Only display if confidence is reasonable
+                        emotionDisplay.textContent = `Detected: ${dominantEmotion.charAt(0).toUpperCase() + dominantEmotion.slice(1)} (${Math.round(maxConfidence * 100)}%)`;
+                        emotionDisplay.className = `emotion-label ${dominantEmotion}`;
+                        
+                        // Add current dominant emotion to buffer
+                        currentEmotionBuffer.push(dominantEmotion);
+                        if (currentEmotionBuffer.length > EMOTION_BUFFER_SIZE) {
+                            currentEmotionBuffer.shift(); // Remove oldest emotion to maintain buffer size
+                        }
+
+                        // Check for emotion stability to trigger chatbot
+                        if (currentEmotionBuffer.length === EMOTION_BUFFER_SIZE) {
+                            const counts = currentEmotionBuffer.reduce((acc, val) => {
+                                acc[val] = (acc[val] || 0) + 1;
+                                return acc;
+                            }, {});
+                            
+                            const mostFrequentEmotionInBuffer = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+                            
+                            // If the most frequent emotion is stable enough AND different from the last stable emotion
+                            // AND not currently in cooldown, trigger the chatbot.
+                            if (counts[mostFrequentEmotionInBuffer] / EMOTION_BUFFER_SIZE >= STABILITY_THRESHOLD) {
+                                if (mostFrequentEmotionInBuffer !== lastStableEmotion && !chatbotCooldown) {
+                                    lastStableEmotion = mostFrequentEmotionInBuffer;
+                                    console.log(`Stable emotion detected: ${lastStableEmotion}`);
+                                    triggerChatbotForEmotion(lastStableEmotion);
+                                    chatbotCooldown = true; // Activate cooldown
+                                    setTimeout(() => {
+                                        chatbotCooldown = false;
+                                        lastStableEmotion = null; // Allow new detection after cooldown
+                                    }, CHATBOT_COOLDOWN_PERIOD);
+                                }
+                            }
+                        }
+
+                    } else {
+                        emotionDisplay.textContent = "Expression unclear or neutral";
+                        emotionDisplay.className = "emotion-label neutral";
+                    }
+                } else {
+                    emotionDisplay.textContent = "No face detected.";
+                    emotionDisplay.className = "emotion-label unknown";
+                    currentEmotionBuffer = []; // Clear buffer if no face
+                    lastStableEmotion = null;
+                }
+            } catch (error) {
+                console.error("Error during detection:", error);
+                // Can add a specific message to emotionDisplay for a brief moment if needed
+            }
+
+            // Continue the detection loop using requestAnimationFrame for smoother animation
+            if (startBtn.disabled) { // Only continue if detection is still active
+                detectionIntervalId = requestAnimationFrame(detectEmotions);
+            }
+        }
+
+        // --- Chatbot Functions ---
+
+        /**
+         * Adds a message to the chat log display.
+         * @param {string} message - The text content of the message.
+         * @param {string} sender - 'user' or 'bot'.
+         * @param {boolean} [isEmpathy=false] - True if it's an emotion-triggered empathy message from bot.
+         */
+        function addMessageToChatLog(message, sender, isEmpathy = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('chat-message');
+            if (sender === 'user') {
+                messageDiv.classList.add('user-message');
+            } else {
+                messageDiv.classList.add('bot-message');
+                if (isEmpathy) {
+                    messageDiv.classList.add('empathy-message');
+                }
+            }
+            messageDiv.textContent = message;
+            chatLog.appendChild(messageDiv);
+            chatLog.scrollTop = chatLog.scrollHeight; // Auto-scroll to latest message
+        }
+
+        /**
+         * Calls the Gemini API with a given prompt to get a chatbot response.
+         * Handles API key checking and UI state (disabling input/send button).
+         * @param {string} promptText - The text prompt to send to the Gemini API.
+         * @returns {Promise<string>} The chatbot's response or an error message.
+         */
+        async function callGeminiAPI(promptText) {
+            if (!GEMINI_API_KEY) { // Check if API key is empty (Canvas will inject if missing)
+                console.warn("Gemini API Key is not explicitly set in the code. Canvas environment might inject it.");
+            }
+            sendChatBtn.disabled = true;
+            chatInput.disabled = true;
+
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+
+            const requestBody = {
+                contents: [{
+                    parts: [{ text: promptText }]
+                }],
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Gemini API Error:', errorData);
+                    // Provide a more user-friendly error message if available
+                    throw new Error(`API Error: ${response.status} ${response.statusText} - ${errorData.error?.message || 'Unknown error'}`);
+                }
+
+                const data = await response.json();
+                if (data.candidates && data.candidates.length > 0 &&
+                    data.candidates[0].content && data.candidates[0].content.parts &&
+                    data.candidates[0].content.parts.length > 0) {
+                    return data.candidates[0].content.parts[0].text.trim();
+                } else {
+                    console.warn("No valid content in Gemini response:", data);
+                    return "I'm having a little trouble forming a response right now.";
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                return `Sorry, I encountered an issue: ${error.message.substring(0, 100)}...`; // Truncate long error messages
+            } finally {
+                sendChatBtn.disabled = false;
+                chatInput.disabled = false;
+                chatInput.focus(); // Bring focus back to input field
+            }
+        }
+
+        /**
+         * Triggers a chatbot response based on a detected stable emotion.
+         * @param {string} emotion - The detected emotion (e.g., 'happy', 'sad', 'angry').
+         */
+        async function triggerChatbotForEmotion(emotion) {
+            console.log(`Chatbot triggered for emotion: ${emotion}`);
+            let prompt;
+            // Define specific prompts for different emotions
+            switch (emotion) {
+                case 'happy':
+                    prompt = "The user seems to be feeling happy. Offer a short, uplifting message or a gentle positive affirmation. Keep it concise.";
+                    break;
+                case 'sad':
+                    prompt = "The user seems to be feeling sad. Offer a brief, empathetic message of support and understanding. Suggest a very simple, gentle coping thought. Keep it concise.";
+                    break;
+                case 'angry':
+                    prompt = "The user seems to be feeling angry. Offer a very brief, calming message. Acknowledge the feeling without judgment and perhaps suggest taking a moment to breathe. Keep it concise.";
+                    break;
+                case 'surprised':
+                    prompt = "The user seems to be surprised. Offer a lighthearted, curious, or reassuring brief message. Keep it concise.";
+                    break;
+                case 'neutral':
+                    prompt = "The user seems to have a neutral expression. Offer a calm, gentle check-in message or a simple mindfulness reminder. Keep it concise. For example: 'Feeling neutral can be a good moment for a calm breath.'";
+                    break;
+                case 'fearful':
+                    prompt = "The user seems to be feeling fearful or anxious. Offer a brief, reassuring and calming message. Suggest a simple grounding technique like focusing on their breath. Keep it concise.";
+                    break;
+                case 'disgusted':
+                    prompt = "The user seems to be feeling disgusted. Acknowledge this strong emotion briefly and offer a neutral, grounding thought. Keep it concise.";
+                    break;
+                default:
+                    prompt = `The user is showing an emotion: ${emotion}. Offer a general supportive and brief message.`;
+            }
+            
+            // Construct the full prompt for the Gemini API
+            const fullPrompt = `You are a friendly and empathetic AI assistant designed to provide brief, supportive mental wellness messages. Do not ask questions like "How can I help?". Respond directly to the implied feeling. User's detected emotion: ${emotion}. Your task based on this: ${prompt}`;
+
+            addMessageToChatLog(`I sense you might be feeling ${emotion}. Thinking...`, 'bot', true);
+            const botResponse = await callGeminiAPI(fullPrompt);
+            addMessageToChatLog(botResponse, 'bot', true);
+        }
+
+        /**
+         * Handles user input in the chat, sends it to Gemini API, and displays response.
+         */
+        async function handleUserChat() {
+            const userMessage = chatInput.value.trim();
+            if (!userMessage) return; // Do nothing if input is empty
+
+            addMessageToChatLog(userMessage, 'user');
+            chatInput.value = ''; // Clear input field
+
+            const followUpPrompt = `You are a friendly and empathetic AI assistant. The user said: "${userMessage}". Provide a supportive and helpful response. If the user's message is short or unclear, you can offer general encouragement or ask a gentle open-ended question to understand more, like 'Tell me a bit more about that if you feel comfortable.'`;
+            
+            addMessageToChatLog('Thinking...', 'bot'); // Show immediate bot thinking status
+            const botResponse = await callGeminiAPI(followUpPrompt);
+            addMessageToChatLog(botResponse, 'bot');
+        }
+
+        // --- Event Listeners and Initial Setup ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile menu toggle
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('mobile-menu-enter');
+                }
+            });
+
+            // Close mobile menu when a link is clicked
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            // Populate particles background
+            const numParticles = 50;
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 5 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                const startLeft = Math.random() * 100;
+                particle.style.left = `${startLeft}vw`;
+
+                const animationDuration = Math.random() * 15 + 15;
+                particle.style.animationDuration = `${animationDuration}s`;
+                const animationDelay = Math.random() * -animationDuration; // Start some particles mid-animation
+                particle.style.animationDelay = `${animationDelay}s`;
+
+                particlesContainer.appendChild(particle);
+            }
+
+            // Scroll progress indicator update
+            window.addEventListener('scroll', () => {
+                const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPosition = window.scrollY;
+                const progress = (scrollPosition / totalHeight) * 100;
+                scrollIndicator.style.width = `${progress}%`;
+
+                // Shrink header on scroll
+                const header = document.querySelector('header');
+                if (scrollPosition > 50) {
+                    header.classList.add('py-2', 'px-4', 'md:px-6', 'text-sm');
+                    header.classList.remove('py-4', 'px-6', 'md:px-8', 'text-base');
+                } else {
+                    header.classList.remove('py-2', 'px-4', 'md:px-6', 'text-sm');
+                    header.classList.add('py-4', 'px-6', 'md:px-8', 'text-base');
+                }
+            });
+
+            // Intersection Observer for fade-in/slide-up animations
+            const animateOnScroll = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100'); // Ensure opacity is set
+                        // Re-apply animation to trigger it
+                        if (entry.target.classList.contains('animate-fade-in-scale')) {
+                            entry.target.style.animation = 'fadeInScale 0.8s cubic-bezier(0.23, 1, 0.320, 1) forwards';
+                        } else if (entry.target.classList.contains('animate-slide-in-up')) {
+                            entry.target.style.animation = 'slideInUp 0.7s cubic-bezier(0.23, 1, 0.320, 1) forwards';
+                        }
+                        observer.unobserve(entry.target); // Stop observing once animated
+                    }
+                });
+            };
+
+            const observerOptions = {
+                root: null, // relative to the viewport
+                rootMargin: '0px',
+                threshold: 0.1 // callback executes when 10% of target is visible
+            };
+
+            const observer = new IntersectionObserver(animateOnScroll, observerOptions);
+
+            // Observe all elements that should animate on scroll
+            document.querySelectorAll('.animate-fade-in-scale, .animate-slide-in-up').forEach(element => {
+                element.style.opacity = '0'; // Hide elements initially
+                observer.observe(element);
+            });
+
+            // Emotion Detection Control Buttons
+            startBtn.addEventListener('click', startVideo);
+            stopBtn.addEventListener('click', stopDetection);
+
+            // Chatbot Input and Send Button
+            sendChatBtn.addEventListener('click', handleUserChat);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleUserChat();
+                }
+            });
+
+            // Initial model loading
+            loadModels();
+        });
+    </script>
+</body>
+</html>

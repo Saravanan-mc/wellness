@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Face Emotion Detection</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+  <style>
+    body {
+      text-align: center;
+      margin: 0;
+      font-family: sans-serif;
+    }
+    video {
+      border: 2px solid #444;
+    }
+    canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    #container {
+      position: relative;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <h1>Face Emotion Detection</h1>
+  <div id="container">
+    <video id="video" width="720" height="560" autoplay muted></video>
+  </div>
+
+  <script>
+    const video = document.getElementById('video');
+
+    async function startVideo() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+      } catch (err) {
+        console.error("Error accessing webcam:", err);
+      }
+    }
+
+    async function loadModels() {
+      const MODEL_URL = 'https://cdn.jsdelivr.net/npm/face-api.js/models';
+      await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+      await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
+    }
+
+    video.addEventListener('play', () => {
+      const canvas = faceapi.createCanvasFromMedia(video);
+      document.getElementById('container').append(canvas);
+
+      const displaySize = { width: video.width, height: video.height };
+      faceapi.matchDimensions(canvas, displaySize);
+
+      setInterval(async () => {
+        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
+        const resizedDetections = faceapi.resizeResults(detections, displaySize);
+
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+        faceapi.draw.drawDetections(canvas, resizedDetections);
+        faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
+      }, 100);
+    });
+
+    loadModels().then(startVideo);
+  </script>
+</body>
+</html>

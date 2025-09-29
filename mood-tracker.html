@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindful Paths - Mood Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1e293b;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes morphingGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(139, 92, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(236, 72, 153, 0.4), 0 0 60px rgba(236, 72, 153, 0.3);
+            }
+        }
+
+        @keyframes textGlow {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(139, 92, 246, 0.3);
+            }
+        }
+
+        .animate-fade-in-scale {
+            animation: fadeInScale 0.8s cubic-bezier(0.23, 1, 0.320, 1) forwards;
+        }
+
+        .animate-slide-in-up {
+            animation: slideInUp 0.7s cubic-bezier(0.23, 1, 0.320, 1) forwards;
+            opacity: 0;
+        }
+
+        .animate-morphing-glow {
+            animation: morphingGlow 3s ease-in-out infinite;
+        }
+
+        .animate-text-glow {
+            animation: textGlow 2s ease-in-out infinite;
+        }
+
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(45deg, #8b5cf6, #ec4899);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.4);
+        }
+
+        .mobile-menu-enter {
+            animation: fadeInScale 0.3s ease-out forwards;
+        }
+
+        .gradient-text {
+            background: linear-gradient(45deg, #8b5cf6, #ec4899, #f59e0b);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6, #ec4899);
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+        .stagger-5 { animation-delay: 0.5s; }
+        .stagger-6 { animation-delay: 0.6s; }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+
+    <div class="particles" id="particles"></div>
+
+    <header class="glass fixed top-4 left-4 right-4 py-4 px-6 md:px-8 z-50 rounded-2xl transition-all duration-300">
+        <nav class="flex items-center justify-between max-w-7xl mx-auto">
+            <a href="index.html" class="flex items-center space-x-3 text-2xl font-bold text-white hover:text-purple-200 transition-all duration-300 group">
+                <div class="relative">
+                    <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 002.944 12c.047 1.41.272 2.802.675 4.162a12.001 12.001 0 0018.362-7.162 11.955 11.955 0 01-3.04-8.618z" />
+                        </svg>
+                    </div>
+                    <div class="absolute -inset-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                </div>
+                <span class="gradient-text">Mindful Paths</span>
+            </a>
+
+<ul id="desktop-menu" class="hidden md:flex space-x-8">
+        <li><a href="index.html" class="text-white/80 hover:text-white font-medium transition-all duration-300 relative group px-4 py-2 rounded-lg hover:bg-white/10">
+            <i class="fas fa-home"></i> Home
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 group-hover:w-full transition-all duration-300"></span>
+        </a></li>
+        <li><a href="resources.html" class="text-white/80 hover:text-white font-medium transition-all duration-300 relative group px-4 py-2 rounded-lg hover:bg-white/10">
+            <i class="fas fa-book-open"></i> Resources
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 group-hover:w-full transition-all duration-300"></span>
+        </a></li>
+        <li><a href="tools.html" class="text-white/80 hover:text-white font-medium transition-all duration-300 relative group px-4 py-2 rounded-lg hover:bg-white/10">
+            <i class="fas fa-tools"></i> Tools
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 group-hover:w-full transition-all duration-300"></span>
+        </a></li>
+        <li><a href="contact.html" class="text-white/80 hover:text-white font-medium transition-all duration-300 relative group px-4 py-2 rounded-lg hover:bg-white/10">
+            <i class="fas fa-robot"></i> AI Bot
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 group-hover:w-full transition-all duration-300"></span>
+        </a></li>
+            <button id="mobile-menu-button" class="md:hidden text-white hover:text-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-lg p-2 transition-all duration-300">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </nav>
+
+            <button id="mobile-menu-button" class="md:hidden text-white hover:text-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-lg p-2 transition-all duration-300">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </nav>
+
+        <div id="mobile-menu" class="md:hidden hidden mt-4 glass-dark rounded-xl p-4">
+            <ul class="space-y-2">
+                <li><a href="index.html" class="block text-white/80 hover:text-white font-medium py-3 px-4 rounded-lg hover:bg-white/10 transition-all duration-300">Home</a></li>
+                <li><a href="resources.html" class="block text-white/80 hover:text-white font-medium py-3 px-4 rounded-lg hover:bg-white/10 transition-all duration-300">Resources</a></li>
+                <li><a href="tools.html" class="block text-white font-medium py-3 px-4 rounded-lg bg-white/10 transition-all duration-300">Tools</a></li>
+                <li><a href="contact.html" class="block text-white/80 hover:text-white font-medium py-3 px-4 rounded-lg hover:bg-white/10 transition-all duration-300">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="pt-32 container mx-auto px-6 md:px-12 py-8">
+
+        <section class="glass rounded-xl p-8 md:p-12 mb-16 animate-fade-in-scale">
+            <h2 class="text-3xl md:text-5xl font-bold text-center text-white mb-10 animate-text-glow">Track Your <span class="gradient-text">Mood</span></h2>
+            <p class="text-lg md:text-xl text-white/90 text-center mb-12 max-w-2xl mx-auto leading-relaxed animate-slide-in-up stagger-1">
+                Understanding your emotional patterns can be a powerful step towards better mental well-being. Use this simple mood tracker to log how you're feeling each day and observe your emotional landscape.
+            </p>
+
+            <div class="mb-10 animate-slide-in-up stagger-2 text-center">
+                <label for="mood-select" class="block text-xl font-semibold text-white mb-4">How are you feeling today?</label>
+                <div class="relative w-full md:w-2/3 mx-auto">
+                    <select id="mood-select" class="glass-dark block w-full px-5 py-4 border border-white/20 rounded-xl shadow-inner focus:ring-purple-500 focus:border-purple-500 text-lg text-white appearance-none pr-8 transition-all duration-300">
+                        <option value="" class="bg-gray-800 text-white">-- Select Your Mood --</option>
+                        <option value="😃 Happy" class="bg-gray-800 text-white">😃 Happy</option>
+                        <option value="😊 Content" class="bg-gray-800 text-white">😊 Content</option>
+                        <option value="😐 Neutral" class="bg-gray-800 text-white">😐 Neutral</option>
+                        <option value="😟 Anxious" class="bg-gray-800 text-white">😟 Anxious</option>
+                        <option value="😔 Sad" class="bg-gray-800 text-white">😔 Sad</option>
+                        <option value="😠 Angry" class="bg-gray-800 text-white">😠 Angry</option>
+                        <option value="😴 Tired" class="bg-gray-800 text-white">😴 Tired</option>
+                        <option value="😌 Relaxed" class="bg-gray-800 text-white">😌 Relaxed</option>
+                        <option value="🤩 Excited" class="bg-gray-800 text-white">🤩 Excited</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+                <button id="add-mood-button" class="btn-primary mt-8 px-10 py-4 rounded-full font-bold text-lg shadow-xl relative z-10 transform hover:scale-105 transition-all duration-300">
+                    Add Mood
+                </button>
+            </div>
+
+            <div class="animate-slide-in-up stagger-3">
+                <h3 class="text-2xl md:text-3xl font-bold text-white mb-8">Your Mood Log:</h3>
+                <ul id="mood-list" class="glass-dark p-8 rounded-2xl shadow-inner text-left space-y-6">
+                    <li class="text-white/70 text-lg">No moods logged yet.</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="glass-dark mt-24 py-12 px-4 md:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center space-y-8 md:space-y-0">
+                <div class="text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start space-x-3 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 002.944 12c.047 1.41.272 2.802.675 4.162a12.001 12.001 0 0018.362-7.162 11.955 11.955 0 01-3.04-8.618z" />
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold gradient-text">Mindful Paths</span>
+                    </div>
+                    <p class="text-white/70 mb-2">&copy; 2025 Mindful Paths. All rights reserved.</p>
+                    <p class="text-white/50 text-sm">Nurturing minds, fostering peace, transforming lives.</p>
+                </div>
+
+                <ul class="flex flex-wrap justify-center gap-8">
+                    <li><a href="index.html" class="text-white/70 hover:text-white transition-colors duration-300">Home</a></li>
+                    <li><a href="resources.html" class="text-white/70 hover:text-white transition-colors duration-300">Resources</a></li>
+                    <li><a href="tools.html" class="text-white/70 hover:text-white transition-colors duration-300">Tools</a></li>
+                    <li><a href="contact.html" class="text-white/70 hover:text-white transition-colors duration-300">Contact</a></li>
+                    <li><a href="#" class="text-white/70 hover:text-white transition-colors duration-300">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('mobile-menu-enter');
+                }
+            });
+
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            const particlesContainer = document.getElementById('particles');
+            const numParticles = 50;
+
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 5 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                const startLeft = Math.random() * 100;
+                particle.style.left = `${startLeft}vw`;
+
+                const animationDuration = Math.random() * 15 + 15;
+                particle.style.animationDuration = `${animationDuration}s`;
+                const animationDelay = Math.random() * -animationDuration;
+                particle.style.animationDelay = `${animationDelay}s`;
+
+                particlesContainer.appendChild(particle);
+            }
+
+            const scrollIndicator = document.getElementById('scrollIndicator');
+
+            window.addEventListener('scroll', () => {
+                const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPosition = window.scrollY;
+                const progress = (scrollPosition / totalHeight) * 100;
+                scrollIndicator.style.width = `${progress}%`;
+
+                const header = document.querySelector('header');
+                if (scrollPosition > 50) {
+                    header.classList.add('py-2', 'px-4', 'md:px-6', 'text-sm');
+                    header.classList.remove('py-4', 'px-6', 'md:px-8', 'text-base');
+                } else {
+                    header.classList.remove('py-2', 'px-4', 'md:px-6', 'text-sm');
+                    header.classList.add('py-4', 'px-6', 'md:px-8', 'text-base');
+                }
+            });
+
+            const animateOnScroll = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100');
+                        if (entry.target.classList.contains('animate-fade-in-scale')) {
+                            entry.target.style.animation = 'fadeInScale 0.8s cubic-bezier(0.23, 1, 0.320, 1) forwards';
+                        } else if (entry.target.classList.contains('animate-slide-in-up')) {
+                            entry.target.style.animation = 'slideInUp 0.7s cubic-bezier(0.23, 1, 0.320, 1) forwards';
+                        }
+                        observer.unobserve(entry.target);
+                    }
+                });
+            };
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver(animateOnScroll, observerOptions);
+
+            document.querySelectorAll('.animate-fade-in-scale, .animate-slide-in-up').forEach(element => {
+                element.style.opacity = '0';
+                observer.observe(element);
+            });
+
+            const moodSelect = document.getElementById('mood-select');
+            const addMoodButton = document.getElementById('add-mood-button');
+            const moodList = document.getElementById('mood-list');
+            
+            let moods = JSON.parse(localStorage.getItem('moodEntries')) || [];
+
+            function renderMoods() {
+                moodList.innerHTML = '';
+
+                if (moods.length === 0) {
+                    moodList.innerHTML = '<li class="text-white/70 text-lg">No moods logged yet.</li>';
+                    return;
+                }
+
+                moods.forEach((moodEntry, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'glass p-4 rounded-xl shadow-lg flex justify-between items-center transform hover:scale-[1.02] transition-all duration-300 animate-slide-in-up';
+                    listItem.style.animationDelay = `${0.1 * index}s`;
+
+                    listItem.innerHTML = `
+                        <span class="text-white text-lg">${moodEntry.date} - ${moodEntry.mood}</span>
+                        <button class="text-red-400 hover:text-red-300 font-semibold text-sm delete-mood-button transition-colors duration-300" data-index="${index}">Delete</button>
+                    `;
+                    moodList.appendChild(listItem);
+                });
+
+                document.querySelectorAll('.delete-mood-button').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const indexToDelete = parseInt(event.target.dataset.index);
+                        moods.splice(indexToDelete, 1);
+                        localStorage.setItem('moodEntries', JSON.stringify(moods));
+                        renderMoods();
+                    });
+                });
+            }
+
+            addMoodButton.addEventListener('click', () => {
+                const selectedMood = moodSelect.value;
+                if (selectedMood) {
+                    const now = new Date();
+                    const dateString = now.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }) + ' ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+                    moods.unshift({ mood: selectedMood, date: dateString });
+                    localStorage.setItem('moodEntries', JSON.stringify(moods));
+                    renderMoods();
+                    moodSelect.value = '';
+                }
+            });
+
+            renderMoods();
+        });
+    </script>
+</body>
+</html>
